@@ -1,3 +1,7 @@
+const createElements = (arr) => {
+  const htmlElements = arr.map((el) => `<span class="btn">${el}</span>`);
+  return htmlElements.join(" ");
+};
 const loadLesson = () => {
   fetch("https://openapi.programming-hero.com/api/levels/all")
     .then((res) => res.json())
@@ -10,7 +14,6 @@ const removeActive = () => {
 
 const loadLevelWord = (id) => {
   const url = `https://openapi.programming-hero.com/api/level/${id}`;
-  console.log(url);
   fetch(url)
     .then((res) => res.json())
     .then((data) => {
@@ -19,6 +22,38 @@ const loadLevelWord = (id) => {
       const lessonClickBtn = document.getElementById(`lesson-btn-${id}`);
       lessonClickBtn.classList.add("btn-active");
     });
+};
+const loadWordDetail = (id) => {
+  const url = `https://openapi.programming-hero.com/api/word/${id}`;
+  fetch(url)
+    .then((res) => res.json())
+    .then((details) => wordDisplay(details.data));
+};
+
+const wordDisplay = (word) => {
+  const loadWordDetail = document.getElementById("details-container");
+  loadWordDetail.innerHTML = `
+  
+    <div>
+      <h2 class="text-4xl font-semibold">${
+        word.word
+      }(<i class="fa-solid fa-microphone-lines"></i>:${word.pronunciation})</h2>
+    </div>
+    <div class="space-y-3">
+      <h3 class="text-2xl font-semibold">Meaning</h3>
+      <p class="text-2xl font-medium">${word.meaning}</p>
+    </div>
+    <div class="space-y-3">
+      <h3 class="text-2xl font-semibold">Example</h3>
+      <p class="text-2xl font-normal">${word.sentence}</p>
+    </div>
+    <div class="gap-2">
+      <h3 class="font-bangla text-2xl font-medium">সমার্থক শব্দ গুলো</h3>
+      <div class="">${createElements(word.synonyms)}</div>
+    </div>
+      
+      `;
+  document.getElementById("my_modal_5").showModal();
 };
 
 const displayLevelWord = (words) => {
@@ -49,7 +84,10 @@ const displayLevelWord = (words) => {
       word.pronunciation ? word.pronunciation : "Pronunciation পাওয়া যায়নি"
     }"</div>
         <div class="flex justify-between items-center pt-6">
-          <button class="btn bg-[#1a91ff1a] hover:bg-[#1a91ff8a]"><i class="fa-solid fa-circle-info"></i></button>
+
+          <button onclick="loadWordDetail(${
+            word.id
+          })" class="btn bg-[#1a91ff1a] hover:bg-[#1a91ff8a]"><i class="fa-solid fa-circle-info"></i></button>
           <button class="btn bg-[#1a91ff1a] hover:bg-[#1a91ff8a]"><i class="fa-solid fa-volume-high"></i></button>
         </div>
       </div>
