@@ -2,6 +2,16 @@ const createElements = (arr) => {
   const htmlElements = arr.map((el) => `<span class="btn">${el}</span>`);
   return htmlElements.join(" ");
 };
+const menageSpinner = (status) => {
+  if (status == true) {
+    document.getElementById("spinner").classList.remove("hidden");
+    document.getElementById("word-container").classList.add("hidden");
+  } else {
+    document.getElementById("word-container").classList.remove("hidden");
+    document.getElementById("spinner").classList.add("hidden");
+  }
+};
+
 const loadLesson = () => {
   fetch("https://openapi.programming-hero.com/api/levels/all")
     .then((res) => res.json())
@@ -13,6 +23,7 @@ const removeActive = () => {
 };
 
 const loadLevelWord = (id) => {
+  menageSpinner(true);
   const url = `https://openapi.programming-hero.com/api/level/${id}`;
   fetch(url)
     .then((res) => res.json())
@@ -67,6 +78,7 @@ const displayLevelWord = (words) => {
         <h2 class="text-3xl font-medium text-[#292524]">নেক্সট Lesson এ যান</h2>
       </div>
     `;
+    menageSpinner(false);
     return;
   }
 
@@ -94,6 +106,7 @@ const displayLevelWord = (words) => {
     `;
     wordContainer.append(wordDiv);
   });
+  menageSpinner(false);
 };
 
 const displayLesson = (lessons) => {
